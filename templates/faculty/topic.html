@@ -1,0 +1,89 @@
+{% extends 'faculty/base.html' %}
+
+{% block title %}Course Topics{% endblock %}
+
+{% block content %}
+<div class="container mt-2">
+  <h2 class="mb-4">📚 Course – Learning Materials</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="card shadow">
+    <div class="card-header bg-success text-white">
+      <i class="bi bi-journal-plus me-2"></i>Create New Topic
+    </div>
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+        <!-- Topic Number -->
+        <div class="mb-3">
+          <label for="topicNumber" class="form-label">Topic Number</label>
+          <input type="number" class="form-control" id="topicNumber" name="topic_no" placeholder="e.g., 1">
+        </div>
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label for="topicTitle" class="form-label">Topic Title</label>
+          <input type="text" class="form-control" id="topicTitle" name="title"
+            placeholder="e.g., Variables and Data Types">
+        </div>
+
+        <!-- Subtitle / Description -->
+        <div class="mb-3">
+          <label for="topicSubtitle" class="form-label">Topic Subtitle</label>
+          <textarea class="form-control" id="topicSubtitle" name="subtitle" rows="3"
+            placeholder="Briefly describe the topic..."></textarea>
+        </div>
+
+        <!-- Upload File -->
+        <div class="mb-3">
+          <label for="quizFile" class="form-label">Upload Quiz (PDF, DOCX, PPTx.)</label>
+          <input class="form-control" type="file" id="quizFile" name="file">
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-cloud-arrow-up me-1"></i>Upload Topic
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Uploaded Materials List -->
+  <div class="card shadow mt-3">
+    <div class="card-header bg-light">
+      <i class="bi bi-folder2-open me-2"></i>Uploaded Materials
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        {% for topic in topics %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Topic {{ topic.topic_no }} – {{ topic.title }}
+          <span>
+            {% if topic.file_path %}
+            <a href="{{ url_for('static', filename=topic.file_path) }}" target="_blank"
+              class="btn btn-sm btn-secondary me-2">
+              <i class="fa-solid fa-eye"></i> View
+            </a>
+            {% endif %}
+            <a href="#" class="btn btn-sm btn-primary me-2"><i class="fa-solid fa-pen-to-square"></i> Update</a>
+            <a href="#" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i> Delete</a>
+          </span>
+        </li>
+        {% else %}
+        <p class="text-muted">No topics uploaded yet.</p>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

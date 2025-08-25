@@ -1,0 +1,104 @@
+{% extends 'faculty/base.html' %}
+
+{% block title %}Faculty Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Top Bar -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="me-3">
+    Hello, {{ session.get('user', 'User') }}!
+  </div>
+
+  <!-- Search Bar -->
+  <form class="d-flex flex-grow-1 me-3" role="search">
+    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">
+      <i class="fa fa-search"></i>
+    </button>
+  </form>
+
+  <!-- Notification and Profile -->
+  <div class="d-flex align-items-center">
+    <i class="fa-solid fa-bell me-3 fs-5 text-primary"></i>
+    <img src="{{ url_for('static', filename='imgs/dp2.jpg') }}" alt="Profile" class="rounded-circle"
+      style="width: 40px; height: 40px; object-fit: cover;">
+  </div>
+</div>
+
+
+<!-- Dashboard Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="card shadow border-0 bg-info">
+      <div class="card-body d-flex align-items-center py-4">
+        <i class="fa-solid fa-book-open fa-2x text-white me-5"></i>
+        <div class="text-white">
+          <h5 class="card-title mb-1">My Courses</h5>
+          <p class="card-text mb-0" style="font-size: 15px;">1 Active</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow border-0 bg-success">
+      <div class="card-body d-flex align-items-center py-4">
+        <i class="fa-solid fa-users fa-2x text-white me-5"></i>
+        <div class="text-white">
+          <h5 class="card-title mb-1">Students Enrolled</h5>
+          <p class="card-text mb-0" style="font-size: 15px;">21</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow border-0 bg-warning">
+      <div class="card-body d-flex align-items-center py-4">
+        <i class="fa-solid fa-pen-clip fa-2x text-white me-5"></i>
+        <div class="text-white">
+          <h5 class="card-title mb-1">Quiz Created</h5>
+          <p class="card-text mb-0" style="font-size: 15px;">5</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card shadow border-0">
+      <div class="card-body">
+        <h5 class="card-title mb-3">CILO Progress – Introduction to Programming</h5>
+        <canvas id="ciloProgressChart" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="text-center mb-4">
+  <a href="{{ url_for('users.courses') }}" class="btn btn-primary me-2">Manage Courses</a>
+  <a href="/create-quiz" class="btn btn-secondary">Create Quiz</a>
+</div>
+
+<!-- Recent Activity -->
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white fw-bold">
+    Recent Activity
+  </div>
+  <div class="card-body">
+    <ul class="list-unstyled mb-0">
+      {% for topic in topics %}
+      <li>📥 Uploaded Topic {{ topic.topic_no }} – {{ topic.title }} for {{ topic.course.title }}</li>
+      {% endfor %}
+      <li>📝 Reviewed 15 student quiz submissions</li>
+      <li>✅ Created a new quiz for "Math 101"</li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

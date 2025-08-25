@@ -1,0 +1,136 @@
+{% extends 'faculty/base.html' %}
+
+{% block title %}CILOs{% endblock %}
+
+{% block content %}
+<!-- Top Bar -->
+<div class="d-flex justify-content-between align-items-center mb-4 px-3">
+
+  <div class="me-3">
+    Hello, {{ session.get('user', 'user') }}!
+  </div>
+
+  <!-- Search Bar -->
+  <form class="d-flex flex-grow-1 me-3" role="search">
+    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">
+      <i class="fa fa-search"></i>
+    </button>
+  </form>
+
+  <!-- Notification and Profile -->
+  <div class="d-flex align-items-center">
+    <i class="fa-solid fa-bell me-3 fs-5 text-primary"></i>
+    <img src="{{ url_for('static', filename='imgs/dp2.jpg') }}" alt="Profile" class="rounded-circle"
+      style="width: 40px; height: 40px; object-fit: cover;">
+  </div>
+</div>
+
+
+
+<div class="container">
+  <h2 class="mb-4 text-center">Course Intended Learning Outcomes (CILOs)</h2>
+
+  <div class="mb-4 text-center">
+    <label for="courseFilter" class="form-label">Select Course:</label>
+    <select class="form-select w-auto d-inline-block" id="courseFilter" name="course">
+      <option value="all">All Courses</option>
+      <option value="course1">Introduction to Programming</option>
+    </select>
+  </div>
+
+  <!-- CILO Cards -->
+  <div class="row g-4">
+    {% for course in courses %}
+    <div class="col-md-6">
+      <div class="cilo-card shadow border-0 h-100">
+        <div class="card-body p-4">
+          <h5 class="card-title mb-4 ">{{ course.name }}</h5>
+
+          <div class="row">
+            <!-- CILO List -->
+            <div class="col-8">
+              {% for cilo in course.cilos %}
+              <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                  <strong>{{ cilo.title }}</strong>
+                  <small>{{ cilo.progress }}%</small>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: {{ cilo.progress }}%;"
+                    aria-valuenow="{{ cilo.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Doughnut Chart -->
+            <div class="col-4 d-flex justify-content-center align-items-center">
+              <canvas id="chart-{{ loop.index }}"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Register a plugin to draw the percentage in the center
+  Chart.register({
+    id: 'centerText',
+    beforeDraw(chart) {
+      const { width } = chart;
+      const { height } = chart;
+      const { ctx } = chart;
+      const value = chart.config.data.datasets[0].data[0];
+
+      ctx.restore();
+      const fontSize = (height / 114).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      const text = value + "%";
+      const textX = Math.round((width - ctx.measureText(text).width) / 2);
+      const textY = height / 2;
+
+      ctx.fillStyle = "#28a745";
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  });
+
+
+  const courseData = JSON.parse(`{{ courses | tojson | safe }}`);
+
+  courseData.forEach((course, index) => {
+    const ctx = document.getElementById(`chart-${index + 1}`);
+    if (!ctx) return;
+
+    const progress = course.progress;
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: [],
+        datasets: [{
+          data: [progress, 100 - progress],
+          backgroundColor: ['#28a745', '#e9ecef'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'student/base.html' %}
+
+{% block title %}Course Topics{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h3 class="mb-4">Course: Introduction to Programming</h3>
+
+
+  <div class="card shadow">
+    <div class="card-header bg-success text-white">
+      Topic 1
+    </div>
+    <div class="card-body">
+      <figure>
+        <blockquote class="blockquote">
+          <div class="d-flex justify-content-between">
+            <p>Variables & Data Types</p>
+            <button class="btn quiz-btn btn-secondary">View Topic</button>
+          </div>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Understanding basic data types and how to declare variables in Python.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+
+  <div class="card shadow mt-3">
+    <div class="card-header bg-success text-white">
+      Topic 2
+    </div>
+    <div class="card-body ">
+      <figure>
+        <blockquote class="blockquote">
+          <div class="d-flex justify-content-between">
+            <p>Control Structures</p>
+            <button class="btn quiz-btn btn-secondary">View Topic</button>
+          </div>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Using if-else, loops (for, while) to control program flow.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+
+  <div class="card shadow mt-3">
+    <div class="card-header bg-primary text-white">
+      Quiz 1
+    </div>
+    <div class="card-body">
+      <figure>
+        <blockquote class="blockquote mb-2">
+          <!-- <p>Covered Topic 1 & 2</p> -->
+        </blockquote>
+        <div class="quiz d-flex justify-content-between">
+          <p class="text-muted">Test your understanding of the first two topics.</p>
+          <a href="{{ url_for('users.quiz') }}">
+            <button class="btn quiz-btn btn-primary">Start Quiz</button>
+          </a>
+        </div>
+      </figure>
+    </div>
+  </div>
+
+
+  <div class="card shadow mt-3">
+    <div class="card-header bg-success text-white">
+      Topic 3
+    </div>
+    <div class="card-body ">
+      <figure>
+        <blockquote class="blockquote">
+          <div class="d-flex justify-content-between">
+            <p>Writing and Using Functions</p>
+            <button class="btn quiz-btn btn-secondary">View Topic</button>
+          </div>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Creating reusable blocks of code to organize your program and reduce repetition.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="card shadow mt-3">
+    <div class="card-header bg-success text-white">
+      Topic 4
+    </div>
+    <div class="card-body ">
+      <figure>
+        <blockquote class="blockquote">
+          <div class="d-flex justify-content-between">
+            <p>Working with Data Structures</p>
+            <button class="btn quiz-btn btn-secondary">View Topic</button>
+          </div>
+        </blockquote>
+        <figcaption class="blockquote-footer">
+          Using lists, tuples, and dictionaries to manage collections of data.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="card shadow mt-3">
+    <div class="card-header bg-primary text-white">
+      Quiz 2
+    </div>
+    <div class="card-body">
+      <figure>
+        <blockquote class="blockquote mb-2">
+          <!-- <p>Covered Topic 1 & 2</p> -->
+        </blockquote>
+        <div class="quiz d-flex justify-content-between">
+          <p class="text-muted">Test your understanding of the first two topics.</p>
+          <a href="{{ url_for('users.quiz') }}">
+            <button class="btn quiz-btn btn-primary">Start Quiz</button>
+          </a>
+        </div>
+      </figure>
+    </div>
+  </div>
+
+
+</div>
+{% endblock %}

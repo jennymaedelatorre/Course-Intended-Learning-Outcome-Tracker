@@ -1,0 +1,68 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+
+<body>
+
+  <!-- Background image -->
+  <div class="background">
+    <img src="{{ url_for('static', filename='imgs/login1.jpeg') }}" alt="Background" class="bg-image">
+
+    <!-- Login Form -->
+    <div class="register-form">
+      <form method="post">
+
+
+        <div class="text-center mb-4">
+          <img src="{{ url_for('static', filename='imgs/csu-logo.png') }}" alt="Logo" style="width: 100px;">
+          <h2 class="mt-1 text-success"
+            style="font-family: Georgia, 'Times New Roman', Times, serif; font-weight: 600;">Register</h2>
+        </div>
+
+        {% if error %}
+        <p style="color:red" class="mt-3">{{ error }}</p>
+        {% endif %}
+
+        <input name="fullname" placeholder="Full Name" class="form-control mb-3" required>
+        <input name="username" placeholder="Username" class="form-control mb-3" required>
+        <input name="password" type="password" placeholder="Password" class="form-control mb-3" required>
+        <input name="confirm_password" type="password" placeholder="Confirm Password" class="form-control mb-3"
+          required>
+
+        <!-- Role -->
+        <div class="mb-3 mt-3 ms-3">
+          <label class="form-label text-success fw-semibold">Select Role:</label><br>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="student" value="student" required>
+            <label class="form-check-label fw-semibold text-success" for="student">Student</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="role" id="faculty" value="faculty">
+            <label class="form-check-label fw-semibold text-success" for="faculty">Faculty</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Register</button>
+
+        <div class="text-center" style="font-size: 14px;">
+          <a href="{{ url_for('auth.login') }}" class=" text-primary fw-semibold">
+            Login Here
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+
+</html>

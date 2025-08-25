@@ -1,0 +1,105 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}CILO Tracker{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sd.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/faculty/style.css') }}">
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/student/dashboard.css') }}"> -->
+
+</head>
+
+<body>
+
+  <div class="wrapper bg-success">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="d-flex flex-column align-items-center py-3">
+        <button id="toggle-btn" class="border-0" type="button">
+          <img src="{{ url_for('static', filename='imgs/logo5.png') }}" alt="CILO logo">
+        </button>
+        <div class="sidebar-logo">
+          <a href="#" class="text-white text-decoration-none fw-bold">CILO TRACKER</a>
+        </div>
+      </div>
+      <ul class="sidebar-nav">
+        <li class="sidebar-item">
+          <a href="{{ url_for('users.dashboard') }}"
+            class="sidebar-link {% if request.path == url_for('users.dashboard') %}active{% endif %}">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{{ url_for('users.courses') }}"
+            class="sidebar-link {% if request.path == url_for('users.courses') %}active{% endif %}">
+            <i class="fa-solid fa-chalkboard-teacher"></i>
+            <span>Courses</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="{{ url_for('users.cilos') }}"
+            class="sidebar-link {% if request.path == url_for('users.cilos') %}active{% endif %}">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>CILOs</span>
+          </a>
+        </li>
+        <!-- <li class="sidebar-item">
+          <a href="{{ url_for('users.profile') }}" class="sidebar-link">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+          </a>
+        </li> -->
+      </ul>
+      <div class="sidebar-footer">
+        <a href="{{ url_for('auth.logout') }}" class="sidebar-link">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="main p-4">
+      <div class="container-fluid">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const sidebar = document.getElementById("sidebar");
+      const toggleBtn = document.getElementById("toggle-btn");
+
+      // Load saved state
+      const isExpanded = localStorage.getItem("sidebarExpanded") === "true";
+      if (isExpanded) {
+        sidebar.classList.add("expand");
+      }
+
+      // Toggle and save state
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("expand");
+        localStorage.setItem("sidebarExpanded", sidebar.classList.contains("expand"));
+      });
+    });
+
+  </script>
+
+
+
+  <!-- Scripts -->
+  <!-- <script src="{{ url_for('static', filename='js/navbar.js') }}"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  {% block scripts %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/f_chart.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+
+</html>
