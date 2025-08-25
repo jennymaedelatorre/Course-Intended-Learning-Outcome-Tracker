@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for, flash
+from flask import Blueprint, render_template, session, request, redirect, url_for, flash, current_app, send_file
 import os
 from models import Course, Topic, db
 from werkzeug.utils import secure_filename
+
 
 users_bp = Blueprint('users', __name__)
 
@@ -73,6 +74,7 @@ def cilos():
         return render_template('faculty/cilos.html', courses=courses)
     
     return redirect(url_for('auth.login'))
+    
 
 
 @users_bp.route('/profile')
@@ -83,6 +85,8 @@ def profile():
     elif role == 'faculty':
         return render_template('faculty/profile.html')
     return redirect(url_for('auth.login'))
+
+
 
 
 @users_bp.route('/topic/<int:course_id>', methods=['GET', 'POST'])
@@ -100,14 +104,14 @@ def manage_topics(course_id):
         subtitle = request.form['subtitle']
         
         quiz_file = None
-        if 'quizFile' in request.files:
-            file = request.files['quizFile']
+        if 'file' in request.files:
+            file = request.files['file']
             if file and file.filename != '':
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
                 quiz_file = filename
 
-        # create new topic object
+        #  create new topic object
         new_topic = Topic(
             topic_no=topic_no,
             title=title,
@@ -124,6 +128,74 @@ def manage_topics(course_id):
 
     topics = Topic.query.filter_by(course_id=course.id).all()
     return render_template('faculty/topic.html', course=course, topics=topics)
+
+
+
+
+@users_bp.route('/course/<int:course_id>/topics')
+def view_topics(course_id):
+    course = Course.query.get_or_404(course_id)
+    topics = Topic.query.filter_by(course_id=course.id).all()
+    role = session.get('role')
+
+    if role == 'student':
+        return render_template('student/topic.html', course=course, topics=topics)
+    elif role == 'faculty':
+        return render_template('faculty/topic.html', course=course, topics=topics)
+
+    return redirect(url_for('auth.login'))
+
+
+
+
+@users_bp.route('/topic/<int:topic_id>/view')
+def view_topic(topic_id):
+    topic = Topic.query.get_or_404(topic_id)
+
+    if not topic.quiz_file:
+        flash("No file uploaded for this topic.", "warning")
+        return redirect(url_for('users.view_topics', course_id=topic.course_id))
+
+    file_url = url_for('static', filename=f'uploads/{topic.quiz_file}', _external=True)
+    
+  
+    if topic.quiz_file.lower().endswith(".pdf"):
+        return redirect(file_url)
+
+    
+    if topic.quiz_file.lower().endswith((".docx", ".pptx")):
+        gview_url = f"https://docs.google.com/viewer?url={file_url}&embedded=true"
+        return redirect(gview_url)
+
+ 
+    return redirect(file_url)
+
+
+
+
+@users_bp.route('/download/<int:topic_id>')
+def download_topic(topic_id):
+    topic = Topic.query.get_or_404(topic_id)
+
+    if not topic.quiz_file:
+        flash("No file uploaded for this topic.", "warning")
+        return redirect(url_for('users.view_topic', course_id=topic.course_id))
+
+    # Path in uploads
+    upload_path = os.path.join(current_app.static_folder, 'uploads', topic.quiz_file)
+
+    if not os.path.exists(upload_path):
+        flash("File not found in uploads.", "danger")
+        return redirect(url_for('users.view_topic', course_id=topic.course_id))
+
+    # Copy to downloads
+    downloads_path = os.path.join(current_app.static_folder, 'downloads', topic.quiz_file)
+    import shutil
+    shutil.copy(upload_path, downloads_path)
+
+   
+    return send_file(upload_path, as_attachment=True)
+
 
 
 @users_bp.route('/quiz')

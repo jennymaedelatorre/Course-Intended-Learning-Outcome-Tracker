@@ -3,12 +3,15 @@ from auth import auth_bp
 from users import users_bp
 from models import db, bcrypt   
 from courses import courses_bp
+import os
 
 # app.register_blueprint(courses_bp)
 
 def create_app():
     app = Flask(__name__)
     app.secret_key = 'secretkey123'
+
+    app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 
     # Database config (PostgreSQL)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1504@localhost:5432/cilo_db'

@@ -1,0 +1,21 @@
+{% extends 'student/base.html' %}
+
+{% block title %}View Topic{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h3>{{ topic.title }}</h3>
+  <p class="text-muted">{{ topic.subtitle }}</p>
+
+  <div class="mt-3">
+    {% if topic.quiz_file.endswith('.pdf') %}
+      <!-- Display PDF -->
+      <embed src="{{ file_url }}" type="application/pdf" width="100%" height="600px" />
+    {% else %}
+      <a href="{{ file_url }}" target="_blank" class="btn btn-primary">
+        📂 Open {{ topic.quiz_file }}
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

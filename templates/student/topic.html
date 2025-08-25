@@ -4,126 +4,56 @@
 
 {% block content %}
 <div class="container py-4">
-  <h3 class="mb-4">Course: Introduction to Programming</h3>
+  <h3 class="mb-4">Course: {{ course.title }}</h3>
 
-
-  <div class="card shadow">
+  {% for topic in topics %}
+  <!-- Topic Card -->
+  <div class="card shadow mt-3">
     <div class="card-header bg-success text-white">
-      Topic 1
+      Topic {{ topic.topic_no }}
     </div>
     <div class="card-body">
       <figure>
         <blockquote class="blockquote">
-          <div class="d-flex justify-content-between">
-            <p>Variables & Data Types</p>
-            <button class="btn quiz-btn btn-secondary">View Topic</button>
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="mb-0">{{ topic.title }}</p>
+            <div>
+              <!-- View Button -->
+              <a href="{{ url_for('users.view_topic', topic_id=topic.id) }}" target="_blank"
+                class="btn btn-secondary me-2">
+                <i class="bi bi-eye"></i> View
+              </a>
+              <!-- Download Button -->
+              <a href="{{ url_for('users.download_topic', topic_id=topic.id) }}" class="btn btn-secondary"
+                style="background-color: gray;">
+                <i class="bi bi-download"></i> Download
+              </a>
+            </div>
           </div>
         </blockquote>
         <figcaption class="blockquote-footer">
-          Understanding basic data types and how to declare variables in Python.
+          {{ topic.subtitle }}
         </figcaption>
       </figure>
     </div>
   </div>
 
 
-  <div class="card shadow mt-3">
-    <div class="card-header bg-success text-white">
-      Topic 2
-    </div>
-    <div class="card-body ">
-      <figure>
-        <blockquote class="blockquote">
-          <div class="d-flex justify-content-between">
-            <p>Control Structures</p>
-            <button class="btn quiz-btn btn-secondary">View Topic</button>
-          </div>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-          Using if-else, loops (for, while) to control program flow.
-        </figcaption>
-      </figure>
-    </div>
-  </div>
-
-
-  <div class="card shadow mt-3">
+  <!-- Quiz Card for this topic -->
+  <div class="card shadow mt-2">
     <div class="card-header bg-primary text-white">
-      Quiz 1
+      Quiz for Topic {{ topic.topic_no }}
     </div>
     <div class="card-body">
-      <figure>
-        <blockquote class="blockquote mb-2">
-          <!-- <p>Covered Topic 1 & 2</p> -->
-        </blockquote>
-        <div class="quiz d-flex justify-content-between">
-          <p class="text-muted">Test your understanding of the first two topics.</p>
-          <a href="{{ url_for('users.quiz') }}">
-            <button class="btn quiz-btn btn-primary">Start Quiz</button>
-          </a>
-        </div>
-      </figure>
+      <div class="quiz d-flex justify-content-between">
+        <p class="text-muted">Test your understanding of this topic.</p>
+        <a href="{{ url_for('users.quiz', topic_id=topic.id) }}">
+          <button class="btn quiz-btn btn-primary">Start Quiz</button>
+        </a>
+      </div>
     </div>
   </div>
-
-
-  <div class="card shadow mt-3">
-    <div class="card-header bg-success text-white">
-      Topic 3
-    </div>
-    <div class="card-body ">
-      <figure>
-        <blockquote class="blockquote">
-          <div class="d-flex justify-content-between">
-            <p>Writing and Using Functions</p>
-            <button class="btn quiz-btn btn-secondary">View Topic</button>
-          </div>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-          Creating reusable blocks of code to organize your program and reduce repetition.
-        </figcaption>
-      </figure>
-    </div>
-  </div>
-
-  <div class="card shadow mt-3">
-    <div class="card-header bg-success text-white">
-      Topic 4
-    </div>
-    <div class="card-body ">
-      <figure>
-        <blockquote class="blockquote">
-          <div class="d-flex justify-content-between">
-            <p>Working with Data Structures</p>
-            <button class="btn quiz-btn btn-secondary">View Topic</button>
-          </div>
-        </blockquote>
-        <figcaption class="blockquote-footer">
-          Using lists, tuples, and dictionaries to manage collections of data.
-        </figcaption>
-      </figure>
-    </div>
-  </div>
-
-  <div class="card shadow mt-3">
-    <div class="card-header bg-primary text-white">
-      Quiz 2
-    </div>
-    <div class="card-body">
-      <figure>
-        <blockquote class="blockquote mb-2">
-          <!-- <p>Covered Topic 1 & 2</p> -->
-        </blockquote>
-        <div class="quiz d-flex justify-content-between">
-          <p class="text-muted">Test your understanding of the first two topics.</p>
-          <a href="{{ url_for('users.quiz') }}">
-            <button class="btn quiz-btn btn-primary">Start Quiz</button>
-          </a>
-        </div>
-      </figure>
-    </div>
-  </div>
-
-
+  {% endfor %}
 </div>
+
 {% endblock %}
