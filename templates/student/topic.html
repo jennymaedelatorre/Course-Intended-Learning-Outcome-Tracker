@@ -6,6 +6,19 @@
 <div class="container py-4">
   <h3 class="mb-4">Course: {{ course.title }}</h3>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+{% if topics %}
   {% for topic in topics %}
   <!-- Topic Card -->
   <div class="card shadow mt-3">
@@ -54,6 +67,12 @@
     </div>
   </div>
   {% endfor %}
+  {% else %}
+    <!--No topics -->
+    <div class="alert alert-info mt-3">
+      No uploaded topics for this course yet.
+    </div>
+  {% endif %}
 </div>
 
 {% endblock %}

@@ -172,14 +172,13 @@ def view_topic(topic_id):
 
 
 
-
 @users_bp.route('/download/<int:topic_id>')
 def download_topic(topic_id):
     topic = Topic.query.get_or_404(topic_id)
 
     if not topic.quiz_file:
         flash("No file uploaded for this topic.", "warning")
-        return redirect(url_for('users.view_topic', course_id=topic.course_id))
+        return redirect(url_for('users.view_topics', course_id=topic.course_id))
 
     # Path in uploads
     upload_path = os.path.join(current_app.static_folder, 'uploads', topic.quiz_file)
@@ -192,10 +191,45 @@ def download_topic(topic_id):
     downloads_path = os.path.join(current_app.static_folder, 'downloads', topic.quiz_file)
     import shutil
     shutil.copy(upload_path, downloads_path)
-
    
     return send_file(upload_path, as_attachment=True)
 
+
+# update topic
+@users_bp.route('/topic/<int:topic_id>/update', methods=['POST'])
+def update_topic(topic_id):
+    topic = Topic.query.get_or_404(topic_id)
+
+    topic.title = request.form['title']
+    topic.subtitle = request.form['subtitle']
+
+    # Check if a new file was uploaded
+    if 'file' in request.files:
+        file = request.files['file']
+        if file and file.filename:
+            filename = file.filename
+            upload_path = os.path.join(current_app.static_folder, 'uploads', filename)
+            file.save(upload_path)
+
+            # save filename to DB
+            topic.quiz_file = filename
+
+    db.session.commit()
+    flash("Topic updated successfully.", "success")
+    return redirect(url_for('users.view_topics', course_id=topic.course_id))
+
+
+
+# Delete Topic
+@users_bp.route('/topic/<int:topic_id>/delete', methods=['POST'])
+def delete_topic(topic_id):
+    topic = Topic.query.get_or_404(topic_id)
+
+    db.session.delete(topic)
+    db.session.commit()
+    flash("Topic deleted successfully.", "success")
+
+    return redirect(url_for('users.view_topics', course_id=topic.course_id))
 
 
 @users_bp.route('/quiz')
