@@ -50,7 +50,7 @@
         </div>
 
         <div class="d-flex mt-3">
-          <button class="btn btn-success me-3" data-bs-toggle="modal" data-bs-target="#cilosModal">
+          <button class="btn btn-success me-3" data-bs-toggle="modal" data-bs-target="#cilosModal{{ course.id }}">
             View CILOs
           </button>
           <a href="{{ url_for('users.manage_topics', course_id=course.id) }}" class="btn btn-success">
@@ -60,35 +60,35 @@
       </div>
     </div>
   </div>
-  {% endfor %}
-</div>
 
-<!-- CILOs Modal -->
-<div class="modal fade" id="cilosModal" tabindex="-1" aria-labelledby="cilosModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cilosModalLabel">CILO Descriptions</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-group">
-          <li class="list-group-item">
-            <strong>CILO 1:</strong> Understand basic programming concepts and syntax.
-          </li>
-          <li class="list-group-item">
-            <strong>CILO 2:</strong> Apply problem-solving strategies in code.
-          </li>
-          <li class="list-group-item">
-            <strong>CILO 3:</strong> Write, test, and debug simple programs in Python.
-          </li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+  <!-- CILOs Modal -->
+  <div class="modal fade" id="cilosModal{{ course.id }}" tabindex="-1" aria-labelledby="cilosModalLabel{{ course.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title ms-3 fw-bold">CILOs for {{ course.code }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="ms-3 fst-italic">By the end of the course, students should be able to:</p>
+          <ul class="list-group">
+            {% for cilo in course.cilos %}
+            <li class="list-group-item p-2">
+              <strong>CILO {{ cilo.cilo_no }}:</strong> {{ cilo.description }}
+            </li>
+            {% else %}
+            <p class="text-muted ms-3">No CILOs defined yet for this course.</p>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="modal-footer"> <button type="button" class="btn btn-secondary"
+            data-bs-dismiss="modal">Close</button> </div>
       </div>
     </div>
   </div>
+  {% endfor %}
 </div>
 
 
