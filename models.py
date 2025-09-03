@@ -31,8 +31,11 @@ class Course(db.Model):
 
     instructor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    # relationship para maka-access sa User object
+    
     instructor = db.relationship("User", backref="courses")
+
+     # Relationship to CILOs
+    cilos = db.relationship('CILO', back_populates='course')
 
 class Topic(db.Model):
     __tablename__ = "topics"
@@ -48,3 +51,18 @@ class Topic(db.Model):
 
     # Relationship para ma-access ang course
     course = db.relationship("Course", backref="topics")
+
+class CILO(db.Model):
+    __tablename__ = 'cilos'
+
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id', ondelete='CASCADE'), nullable=False)
+    cilo_no = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    
+
+    # Relationship back to Course
+    course = db.relationship('Course', back_populates='cilos')
+
+    def __repr__(self):
+        return f"<CILO {self.cilo_no} - {self.description[:30]}>"

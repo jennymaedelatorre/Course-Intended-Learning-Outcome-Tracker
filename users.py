@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for, flash, current_app, send_file
 import os
-from models import Course, Topic, db
+from models import Course, Topic, db, User
 from werkzeug.utils import secure_filename
 
 
@@ -9,17 +9,43 @@ users_bp = Blueprint('users', __name__)
 @users_bp.route('/dashboard')
 def dashboard():
     role = session.get('role')
+    user_id = session.get('user_id')
 
-    # Query from the Course model
-    all_courses = Course.query.all()
+    # Debugging output
+    print("DEBUG: user_id =", user_id, "role =", role)
 
-    topics = Topic.query.all()
+    if not role:
+        return redirect(url_for('auth.login'))
 
-    if role == 'student':
-        return render_template('student/dashboard.html', courses=all_courses, topics=topics)
-    elif role == 'faculty':
-        return render_template('faculty/dashboard.html', courses=all_courses, topics=topics)
-    return redirect(url_for('auth.login'))
+    if role == 'faculty':
+        # Faculty courses
+        courses = Course.query.filter_by(instructor_id=user_id).all()
+
+        # All topics under those courses
+        topics = Topic.query.join(Course).filter(Course.instructor_id == user_id).all()
+
+        # users with role='student'
+        students_count = User.query.filter_by(role='student').count()
+
+        return render_template(
+            'faculty/dashboard.html',
+            courses=courses,
+            topics=topics,
+            students_count=students_count
+        )
+
+    elif role == 'student':
+        
+        courses = Course.query.all()
+        topics = Topic.query.all()
+
+        return render_template(
+            'student/dashboard.html',
+            courses=courses,
+            topics=topics
+        )
+
+
 
 
 @users_bp.route('/courses')
@@ -230,6 +256,14 @@ def delete_topic(topic_id):
     flash("Topic deleted successfully.", "success")
 
     return redirect(url_for('users.view_topics', course_id=topic.course_id))
+
+
+@users_bp.route('/course/<int:course_id>/cilos')
+def view_cilos(course_id):
+    course = Course.query.get_or_404(course_id)
+    cilos = CILO.query.filter_by(course_id=course_id).order_by(CILO.cilo_no).all()
+    return render_template('student/cilos_modal.html', course=course, cilos=cilos)
+
 
 
 @users_bp.route('/quiz')

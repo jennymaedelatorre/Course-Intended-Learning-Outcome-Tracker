@@ -33,7 +33,7 @@
         <i class="fa-solid fa-book-open fa-2x text-white me-5"></i>
         <div class="text-white">
           <h5 class="card-title mb-1">Courses</h5>
-          <p class="card-text mb-0" style="font-size: 15px;">1 Enrolled</p>
+          <p class="card-text mb-0" style="font-size: 15px;">{{ courses|length }} Enrolled</p>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
         <i class="fa-solid fa-list-check fa-2x text-white me-5"></i>
         <div class="text-white">
           <h5 class="card-title mb-1">Quizzes Taken</h5>
-          <p class="card-text mb-0" style="font-size: 15px;">8 Completed</p>
+          <p class="card-text mb-0" style="font-size: 15px;">{{ quizzes_taken or 0 }} Completed</p>
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@
         <i class="fa-solid fa-chart-line fa-2x text-white me-5"></i>
         <div class="text-white">
           <h5 class="card-title mb-1">Progress</h5>
-          <p class="card-text mb-0" style="font-size: 15px;">72%</p>
+          <p class="card-text mb-0" style="font-size: 15px;">{{ progress }}%</p>
         </div>
       </div>
     </div>

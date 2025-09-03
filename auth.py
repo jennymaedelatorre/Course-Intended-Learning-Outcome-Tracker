@@ -46,6 +46,7 @@ def login():
             if user.role != role:  
                 return render_template('login.html', error="Invalid role selected.")
 
+            session['user_id'] = user.id
             session['user'] = user.username
             session['role'] = user.role
             return redirect(url_for('users.dashboard'))
